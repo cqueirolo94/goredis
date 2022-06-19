@@ -2,7 +2,7 @@ package server
 
 import (
 	"fmt"
-	connectionpool "goredis/server/connection_pool"
+	"goredis/server/connectionpool"
 	"net"
 	"time"
 )
