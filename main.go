@@ -5,7 +5,6 @@ import (
 )
 
 func main() {
-	//cmdmap := command.New()
 	server_ := server.New()
 	server_.Run()
 }

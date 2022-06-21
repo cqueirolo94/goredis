@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"goredis/server/connectionpool"
 	"net"
-	"time"
 )
 
 type Server struct {
@@ -29,31 +28,18 @@ func (s *Server) Run() error {
 	defer ln.Close()
 
 	for {
+		// Each new conn is in a new memory address, so we can pass it down a new channel each.
 		conn, err := ln.Accept()
 		if err != nil {
 			return err
 		}
 
-		// Here I should get a new connection from the ConnectionPool
-		go handleIncomingRequest(conn)
-	}
-}
+		// Here we should handle the connection. Through the conn variable, we read and write to it.
+		// What we read is the user input, and what we write is the response from the redis server.
+		// So, it is reasonable to think we should handle each connection concurrently.
 
-func handleIncomingRequest(conn net.Conn) error {
-	for {
-		// store incoming data
-		buffer := make([]byte, 1024)
-		_, err := conn.Read(buffer)
-		if err != nil {
-			return err
-		}
-		// respond
-		time := time.Now().Format("Monday, 02-Jan-06 15:04:05 MST")
-		conn.Write([]byte("Hi back!\n"))
-		conn.Write([]byte(time))
 	}
 
-	// close conn
-	// conn.Close()
+	// We only arrive here after the server is shut down. Perhaps we look for ctrl+c signal on the server?
 	return nil
 }
