@@ -1,10 +1,10 @@
 package main
 
 import (
-	"goredis/server"
+	"goredis/app"
 )
 
 func main() {
-	server_ := server.New()
-	server_.Run()
+	goredis := app.InitializeApp()
+	goredis.Run()
 }
