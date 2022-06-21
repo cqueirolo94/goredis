@@ -2,19 +2,16 @@ package server
 
 import (
 	"fmt"
-	"goredis/server/connectionpool"
 	"net"
 )
 
 type Server struct {
-	Pool *connectionpool.ConnectionPool
 	Host string
 	Port string
 }
 
 func New() *Server {
 	return &Server{
-		Pool: &connectionpool.ConnectionPool{},
 		Host: "127.0.0.1",
 		Port: "8080",
 	}
