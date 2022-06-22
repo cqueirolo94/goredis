@@ -1,5 +1,11 @@
 package command
 
+import (
+	"bytes"
+	"errors"
+	"strings"
+)
+
 // A map that holds all available functions tied to their name
 type CommandMap struct {
 	Commands map[string]*Command
@@ -13,12 +19,20 @@ type Command struct {
 }
 
 // Returns the result of executing the function of the command passed with its arguments
-func (cm *CommandMap) Run(input string) (string, error) {
-	// TODO: validate the string passed.
+func (cm *CommandMap) Run(byteInput []byte) (string, error) {
+	trimmedBytes := bytes.Trim(byteInput, "\x00\n")
 
-	cmdName, args := ParseInput(input)
+	cmdName, args := ParseInput(string(trimmedBytes))
 
-	return cm.Commands[cmdName].Fn(args...)
+	if strings.ToLower(cmdName) == "exit" {
+		return "", errors.New("exit")
+	}
+
+	cmd, err := cm.Commands[cmdName]
+	if !err {
+		return "Command doesn't exist", nil
+	}
+	return cmd.Fn(args...)
 }
 
 // Creates and returns a new CommandMap pointer, with the commands saved in it.
