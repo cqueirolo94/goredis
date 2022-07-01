@@ -62,3 +62,8 @@ func (app *App) processConnection(conn *server.Connection) {
 		conn.Conn.Write([]byte(res + "\n"))
 	}
 }
+
+func (app *App) handleError(err string) string {
+	errPrefix := "Error: "
+	return errPrefix
+}

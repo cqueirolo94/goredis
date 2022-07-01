@@ -9,9 +9,9 @@ import (
 
 // Test that an input with no spaces returns a nil slice as arguments.
 func TestEmptyInput(t *testing.T) {
-	input := "test_input_no_spaces"
+	input := []byte("test_input_no_spaces")
 	cmdName, args := ParseInput(input)
-	assert.True(t, cmdName == input, "the command name wasn't the full input")
+	assert.True(t, cmdName == string(input), "the command name wasn't the full input")
 	assert.True(t, args == nil, "arguments should be nil")
 }
 
@@ -21,7 +21,7 @@ func TestThreeArgsInput(t *testing.T) {
 	arg1 := "arg1"
 	arg2 := "arg2"
 	arg3 := "arg3"
-	input := fmt.Sprintf("%s %s %s %s", cmdName, arg1, arg2, arg3)
+	input := []byte(fmt.Sprintf("%s %s %s %s", cmdName, arg1, arg2, arg3))
 
 	parsedCmdName, args := ParseInput(input)
 	assert.True(t, parsedCmdName == cmdName, fmt.Sprintf("command name wasn't as expected: %s", parsedCmdName))

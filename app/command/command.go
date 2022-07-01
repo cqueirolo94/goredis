@@ -1,7 +1,6 @@
 package command
 
 import (
-	"bytes"
 	"errors"
 	"strings"
 )
@@ -19,18 +18,17 @@ type Command struct {
 }
 
 // Returns the result of executing the function of the command passed with its arguments
-func (cm *CommandMap) Run(byteInput []byte) (string, error) {
-	trimmedBytes := bytes.Trim(byteInput, "\x00\n")
+func (cm *CommandMap) Run(input []byte) (string, error) {
+	cmdName, args := ParseInput(input)
+	cmdName = strings.ToLower(cmdName)
 
-	cmdName, args := ParseInput(string(trimmedBytes))
-
-	if strings.ToLower(cmdName) == "exit" {
+	if cmdName == "exit" {
 		return "", errors.New("exit")
 	}
 
-	cmd, err := cm.Commands[cmdName]
-	if !err {
-		return "Command doesn't exist", nil
+	cmd := cm.Commands[cmdName]
+	if cmd == nil {
+		return "", errors.New("command does not exists")
 	}
 	return cmd.Fn(args...)
 }
